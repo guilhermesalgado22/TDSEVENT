@@ -1,0 +1,152 @@
+﻿@page "/Events/Create"
+@model PlanejaiFront.Pages.Events.Create
+@{
+    ViewData["Title"] = "Planejaí - Novo Evento";
+}
+
+<style>
+    body {
+        background-color: #e9ecef;
+    }
+
+    .wrapper {
+        margin: 10vh auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-container {
+        min-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+    }
+
+    .form-container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-container label {
+        font-weight: bold;
+    }
+
+    .datetime-info {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .datetime-info .form-group:first-child {
+        flex-basis: 80%;
+        margin-right: 10px;
+    }
+
+    .datetime-info .form-group:not(:first-child) {
+        flex-basis: calc((20% - 10px) / 2);
+    }
+
+    .datetime-errors {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="form-container">
+        <h2>Novo evento</h2>
+        <hr>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NewEvent.Name">Nome:</label>
+                <input asp-for="NewEvent.Name" type="text" class="form-control" onkeyup="handleTextName(event)">
+                <span asp-validation-for="NewEvent.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewEvent.Description">Descrição:</label>
+                <input asp-for="NewEvent.Description" type="text" class="form-control" onkeyup="handleText(event)">
+            </div>
+            <div class="datetime-info">
+                <div class="form-group">
+                    <label asp-for="NewEvent.StartDate">Data de início:</label>
+                    <input asp-for="NewEvent.StartDate" type="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewEvent.StartsAt">Horário:</label>
+                    <input asp-for="NewEvent.StartsAt" type="time" class="form-control">
+                </div>
+            </div>
+            <div class="datetime-info">
+                <div class="form-group">
+                    <label asp-for="NewEvent.EndDate">Data de encerramento:</label>
+                    <input asp-for="NewEvent.EndDate" type="date" class="form-control" max="2030-12-31">
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewEvent.EndsAt">Horário:</label>
+                    <input asp-for="NewEvent.EndsAt" type="time" class="form-control">
+                </div>
+            </div>
+            @if (!ModelState.IsValid)
+            {
+                <div class="form-group datetime-errors">
+                    <span asp-validation-for="NewEvent.StartDate" class="text-danger"></span>
+                    <span asp-validation-for="NewEvent.StartsAt" class="text-danger"></span>
+                    <span asp-validation-for="NewEvent.EndDate" class="text-danger"></span>
+                    <span asp-validation-for="NewEvent.EndsAt" class="text-danger"></span>
+                    <span asp-validation-for="DatesAreValid" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="NewEvent.Local">Local:</label>
+                <input asp-for="NewEvent.Local" type="text" class="form-control" onkeyup="handleText(event)">
+                <span asp-validation-for="NewEvent.Local" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-block" value="Criar evento" />
+                <a asp-page="/Events/Index" class="btn btn-secondary btn-block">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const lettersOnly = (value) => {
+        const regex = /^[a-zA-Z0-9\u00C0-\u00FF,.: ]+$/;
+        return regex.test(value);
+    }
+    const handleText = (event) => {
+        let input = event.target;
+        let value = input.value;
+        if (!lettersOnly(value)) {
+            input.value = value.slice(0, -1);
+        }
+    }
+    const lettersOnlyName = (value) => {
+        const regex = /^[a-zA-Z0-9\u00C0-\u00FF ]+$/;
+        return regex.test(value);
+    }
+    const handleTextName = (event) => {
+        let input = event.target;
+        let value = input.value;
+        if (!lettersOnlyName(value)) {
+            input.value = value.slice(0, -1);
+        }
+    }
+    const handlePhone = (event) => {
+        let input = event.target
+        input.value = phoneMask(input.value)
+    }
+    const phoneMask = (value) => {
+        if (!value) return ""
+        value = value.replace(/\D/g, '')
+        value = value.replace(/(\d{2})(\d)/, "($1) $2")
+        value = value.replace(/(\d)(\d{4})$/, "$1-$2")
+        return value
+    }
+</script>

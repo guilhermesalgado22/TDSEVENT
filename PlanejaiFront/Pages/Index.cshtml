@@ -1,0 +1,33 @@
+﻿@page
+@model PlanejaiFront.Pages.Index
+@{
+    ViewData["Title"] = "Planejaí - Início";
+}
+<style>
+    body { 
+        background-color: #e9ecef; 
+    }
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .jumbotron {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<div class="wrapper">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Bem-vindo ao Planejaí</h1>
+        <p class="lead">O melhor lugar para criar e organizar seus eventos!</p>
+        <hr class="my-4">
+        <p>Cadastre-se para criar eventos personalizados, gerenciar convidados e muito mais.</p>
+        <a asp-page="/User/Register" class="btn btn-primary btn-lg">Cadastre-se</a>
+    </div>
+</div>

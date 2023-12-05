@@ -1,0 +1,87 @@
+﻿@page "/Schedules/Create"
+@using PlanejaiFront.Models;
+@model PlanejaiFront.Pages.Schedules.Create
+@{
+    ViewData["Title"] = "Planejaí - Novo Cronograma";
+}
+
+<style>
+    body {
+        background-color: #e9ecef;
+    }
+
+    .wrapper {
+        margin: 10vh auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-container {
+        min-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+    }
+
+    .form-container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-container label {
+        font-weight: bold;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="form-container">
+        <h2>Novo cronograma</h2>
+        <hr>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NewSchedule.Name">Nome:</label>
+                <input asp-for="NewSchedule.Name" type="text" class="form-control" onkeyup="handleTextName(event)">
+                <span asp-validation-for="NewSchedule.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewSchedule.EventId">Evento:</label>
+                <select asp-for="NewSchedule.EventId" class="form-control">
+                    @foreach (var eventModel in Model.EventsList)
+                    {
+                        <option value="@eventModel.EventId">@eventModel.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="NewSchedule.EventId" class="text-danger"></span>
+            </div>
+            <div class="validation-group">
+                <input type="hidden" asp-for="eventId">
+                <span asp-validation-for="eventId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-block" value="Criar cronograma"/>
+                <a asp-page="/Events/Index" class="btn btn-secondary btn-block">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const lettersOnlyName = (value) => {
+        const regex = /^[a-zA-Z0-9\u00C0-\u00FF ]+$/;
+        return regex.test(value);
+    }
+    const handleTextName = (event) => {
+        let input = event.target;
+        let value = input.value;
+        if (!lettersOnlyName(value)) {
+            input.value = value.slice(0, -1);
+        }
+    }
+</script>

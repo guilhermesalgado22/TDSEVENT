@@ -1,0 +1,137 @@
+﻿@page "{id:int}"
+@model PlanejaiFront.Pages.Events.Details
+@{
+    ViewData["Title"] = $"Planejaí - {Model.Event!.Name}";
+    var imageURL = "https://th.bing.com/th/id/R.3e77a1db6bb25f0feb27c95e05a7bc57?rik=DswMYVRRQEHbjQ&riu=http%3a%2f%2fwww.coalitionrc.com%2fwp-content%2fuploads%2f2017%2f01%2fplaceholder.jpg&ehk=AbGRPPcgHhziWn1sygs8UIL6XIb1HLfHjgPyljdQrDY%3d&risl=&pid=ImgRaw&r=0";
+}
+
+<style>
+    body {
+        background-color: #e9ecef;
+    }
+
+    .wrapper {
+        margin: 10vh auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .event-details {
+        width: 60%;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-details h2 {
+        margin: 20px auto;
+    }
+
+    .event-details img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+    }
+
+    .event-details p {
+        margin-bottom: 10px;
+    }
+
+    .btn-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .guest-list {
+        width: 95%;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px 20px 5px 20px;
+        border-radius: 5px;
+    }
+
+    .guest-list h2 {
+        margin: 20px auto;
+    }
+
+    .guest-list p {
+        margin-bottom: 10px;
+    }
+
+    .guest-list p:last-child {
+        margin-bottom: 0;
+    }
+
+    .guest-list p a:hover {
+        text-decoration: none;   }
+
+    .guest-list hr {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin: 10px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .guest-list-line {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .remove-link {
+        align-self: center;
+    }
+
+    .remove-button:hover {
+        text-decoration: none;    }
+</style>
+
+<div class="wrapper">
+    <div class="event-details">
+        <img src="@imageURL" alt="Imagem do evento @(Model.Event.Name)." />
+        <h2 class="text-center">@Model.Event.Name</h2>
+        <p class="text-center">@Model.Event.Description</p>
+        <p><strong>Local:</strong> @Model.Event.Local</p>
+        <p><strong>Início:</strong> @Model.Event.StartDate?.ToShortDateString() - @Model.Event.StartsAt?.ToShortTimeString()</p>
+        <p><strong>Encerramento:</strong> @Model.Event.EndDate?.ToShortDateString() - @Model.Event.EndsAt?.ToShortTimeString()</p>
+        <p><strong>Organizador:</strong> @Model.OrganizerFullName</p>
+        <p><a asp-page="/Events/Edit" asp-route-id="@Model.Event.EventId">Editar evento</a></p>
+
+        <div class="guest-list">
+            <h2 class="text-center">Lista de convidados</h2>
+            @if (Model.GuestList.Count > 0)
+            {
+                <p><a asp-page="/Guests/Add" asp-route-id="@Model.Event.EventId">Adicionar convidado</a></p>
+                @foreach (var guest in Model.GuestList)
+                {
+                    <hr />
+                    <div class="guest-list-line">
+                        <div class="part">
+                            <p><strong>@guest.Name @guest.LastName</strong> (@guest.Email)</p>
+                            <p><strong>Telefone:</strong> @guest.PhoneNumber</p>
+                        </div>
+                        <p class="part remove-link"><a asp-page="/Guests/Remove" asp-route-eventId="@Model.Event.EventId" asp-route-guestId="@guest.GuestId" class="btn btn-link text-danger">Remover</a></p>
+                    </div>
+                }
+                <hr />
+            }
+            else
+            {
+                <p class="lead text-center">Você ainda não adicionou nenhum convidado. <a asp-page="/Guests/Add" asp-route-id="@Model.Event.EventId">Adicionar agora</a></p>
+            }
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <a asp-page="/Events/Index" class="btn btn-primary btn-lg">Voltar à lista de eventos</a>
+        <a asp-page="/Events/Remove" asp-route-id="@Model.Event.EventId" class="text-danger btn btn-link btn-lg remove-button">Excluir evento</a>
+    </div>
+</div>
